@@ -48,14 +48,16 @@ class RequestHandler(BaseHTTPRequestHandler):
 
     def do_POST(self):
         if self.path == '/upload':
-            ctype, pdict = cgi.parse_header(self.headers.getheader('content-type'))
-            if ctype == 'multipart/form-data':
-                postvars = cgi.parse_multipart(self.rfile, pdict)
-                if "file" in postvars and len(postvars["file"]):
-                    with open("upload", "wb") as out:
-                        out.write(postvars["file"][0])
-                    self.send_response(200)
-                    return
+            form = cgi.FieldStorage(fp=self.rfile,
+                headers=self.headers,
+                environ={'REQUEST_METHOD':'POST'})
+            #Assuming the content-type is multipart
+            print "processing upload:", form["file"].filename
+            if "file" in form:
+                with open(form["file"].filename, "wb") as out:
+                    out.write(form["file"].value)
+                self.send_response(200)
+                return
         self.send_response(404)
 
 def main():
