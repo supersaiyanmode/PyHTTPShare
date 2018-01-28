@@ -108,7 +108,7 @@ $.ajax({
         $('#divFileList').html(htmlStr);
     }
 })
-$("#divDropZone").dropzone({ url: "/upload" });
+$("#divDropZone").dropzone({ url: "/upload", maxFilesize: 4000000 });
 </script>
 </body>
 </html>
